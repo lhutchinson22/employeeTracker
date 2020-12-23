@@ -27,3 +27,18 @@ CREATE TABLE department (
     manager_id INT,
   PRIMARY KEY (id)
 );
+
+INSERT INTO employee (name)
+VALUES ("Hutch");
+
+INSERT INTO employee (name)
+VALUES ("Marce");
+
+INSERT INTO employee (name)
+VALUES ("Blake");
+
+INSERT INTO employee (name)
+VALUES ("Libby");
+
+INSERT INTO employee (name)
+VALUES ("Martin");

@@ -7,7 +7,7 @@ const connection = mysql.createConnection({
   port: 3306,
   user: "root",
   password: "universe",
-  database: "top_songsDB",
+  database: "employees_DB",
 });
 connection.connect((err) => {
   if (err) throw err;
@@ -63,4 +63,12 @@ const mainMenu = () => {
           break;
       }
     });
+};
+const employeeSearch = () => {
+  connection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    console.log(res);
+    mainMenu();
+    // connection.end();
+  });
 };
