@@ -67,8 +67,16 @@ const mainMenu = () => {
 const employeeSearch = () => {
   connection.query("SELECT * FROM employee", (err, res) => {
     if (err) throw err;
-    console.log(res);
+    // console.log(res);
+
+    res.forEach((item) => {
+      console.table([
+        {
+          id: item.id,
+          name: item.name,
+        },
+      ]);
+    });
     mainMenu();
-    // connection.end();
   });
 };
