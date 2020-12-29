@@ -31,6 +31,9 @@ CREATE TABLE department
     (30),
     salary DECIMAL,
     department_id INT,
+    FOREIGN KEY
+    (department_id) REFERENCES department
+    (id),
   PRIMARY KEY
     (id)
 );
@@ -61,8 +64,15 @@ CREATE TABLE department
       (30),
     role_id INT,
     manager_id INT,
-  PRIMARY KEY
+      PRIMARY KEY
+      (id),
+       FOREIGN KEY
+      (role_id) REFERENCES role
+      (id),
+          FOREIGN KEY
+      (manager_id) REFERENCES employee
       (id)
+
 );
 
       INSERT INTO employee
@@ -71,8 +81,12 @@ CREATE TABLE department
         ("lauren", "hutchinson", 1, NULL),
         ("mackenzie", "hutchinson", 2, NULL),
         ("marcela", "hernandez", 5, 1),
-        ("chace", "schornstein", 7, 5),
-        ("Libby", "Harrison", 3, NULL);
+        ("Libby", "Harrison", 3, NULL),
+        ("chace", "schornstein", 7, 5);
+
 
       SELECT *
       FROM employee;
+
+      SELECT department.id AS departmentID, department.name, role.id AS roleID, role.title
+      FROM department LEFT JOIN role ON role.department_id = department.id;
