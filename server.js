@@ -2,6 +2,7 @@
 const cTable = require("console.table");
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+
 const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
@@ -87,29 +88,22 @@ const deparmentSearch = () => {
           choices: res,
         },
       ])
-      .then(({ deptData }) => {
+      .then((deptData) => {
         console.log(deptData);
-        let query =
-          "SELECT department.id, department.name, role.id, role.title";
-        query += " FROM department LEFT JOIN role";
-        query += " ON (role.department_id = department.id) ";
-        connection.query(query, deptData, (err, data) => {
-          console.log(data);
-          if (err) throw err;
-          // data.forEach((item) => {
-          // console.log(item);
-
-          // console.log(item.name, item.title);
-          // if (deptData === "sales") {
-          //   console.table(item);
-          // } else {
-          //   return false;
-          // }
-          // });
-          mainMenu();
-        });
+        connection.query(
+          `SELECT department.id, department.name, role.id, employee.first_name 
+        FROM department 
+        INNER JOIN role ON role.department_id = department.id
+        INNER JOIN employee ON role.id = employee.role_id
+        WHERE department.name = "${deptData.deptChoices}";`,
+          (err, data) => {
+            if (err) throw err;
+            console.table(data);
+          }
+        );
       });
   });
+  mainMenu();
 };
 
 // function to add Employee, role, department
@@ -137,8 +131,26 @@ const addEmployee = () => {
         message: "department of new employee?",
       },
     ])
-    .then((newEmployee) => {
+    .then(({ first, last, roleID, department }) => {
+      ///console tables the input
       console.table(newEmployee);
+
+      //connection to workbench table
+      connection.query(function (err) {
+        if (err) throw err;
+        console.log("Connected to employee table!");
+        //inseting into the table what is captured by node
+        var sql =
+          "INSERT INTO employee (first_name, last_name, role_id, department) VALUES ?";
+        {
+          first, last, roleID, department;
+        }
+        // error:  ReferenceError: newEmployee is not defined
+        data.forEach((item) => {
+          console.log("Employee record inserted");
+          console.table(item.first, item.last, item.roleID, item.department);
+        });
+      });
       mainMenu();
     });
 };
