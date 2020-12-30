@@ -108,49 +108,60 @@ const deparmentSearch = () => {
 
 // function to add Employee, role, department
 const addEmployee = () => {
-  inquirer
-    .prompt([
-      {
-        name: "first_name",
-        type: "input",
-        message: "first name of new employee?",
-      },
-      {
-        name: "last_name",
-        type: "input",
-        message: "last name of new employee?",
-      },
-      {
-        name: "role",
-        type: "input",
-        message: "role of new employee?",
-      },
-      {
-        name: "department",
-        type: "input",
-        message: "department of new employee?",
-      },
-    ])
-    .then(({ first, last, roleID, department }) => {
-      ///console tables the input
-      console.table(newEmployee);
+  connection.query("SELECT title FROM role", (err, roleRes) => {
+    if (err) throw err;
+    // console.log(typeof roleRes);
+    // console.table(JSON.stringify(roleRes));
+    // const roles = JSON.stringify(roleRes);
+    // console.table(roles);
 
-      //connection to workbench table
-      connection.query(function (err) {
-        if (err) throw err;
-        console.log("Connected to employee table!");
-        //inseting into the table what is captured by node
-        var sql =
-          "INSERT INTO employee (first_name, last_name, role_id, department) VALUES ?";
+    inquirer
+      .prompt([
         {
-          first, last, roleID, department;
-        }
-        // error:  ReferenceError: newEmployee is not defined
-        data.forEach((item) => {
-          console.log("Employee record inserted");
-          console.table(item.first, item.last, item.roleID, item.department);
-        });
+          name: "first_name",
+          type: "input",
+          message: "first name of new employee?",
+        },
+        {
+          name: "last_name",
+          type: "input",
+          message: "last name of new employee?",
+        },
+        {
+          name: "role",
+          type: "list",
+          message: "role id of new employee?",
+          choices: [1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          name: "department",
+          type: "input",
+          message: "department of new employee?",
+        },
+      ])
+      .then(({ first, last, roleID, deparment }) => {
+        ///console tables the input
+        console.table(first, last, roleID, deparment);
+        //connection to workbench table
+        connection.query(
+          "SELECT * FROM employee",
+          (err, first, last, roleID, deparment) => {
+            if (err) throw err;
+            console.log("Connected to employee table!");
+            //inserting into the table what is captured by node
+            //     var sql =
+            //       "INSERT INTO employee (first_name, last_name, role_id, department) VALUES ?";
+            //     {
+            //       first, last, roleID, department;
+            //     }
+            //     // error:  ReferenceError: newEmployee is not defined
+            //     data.forEach((item) => {
+            //       console.log("Employee record inserted");
+            //       console.table(item.first, item.last, item.roleID, item.department);
+            //     });
+          }
+        );
+        // mainMenu();
       });
-      mainMenu();
-    });
+  });
 };
