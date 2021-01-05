@@ -23,12 +23,8 @@ const mainMenu = () => {
       choices: [
         "view all employees",
         "view all employees by department",
-        "view all employees by manager",
         "add employee",
-        // "remove employee",
-        // "update employee",
         "update employee role",
-        // "update employee manager",
         "exit",
       ],
     })
@@ -38,26 +34,14 @@ const mainMenu = () => {
           employeeSearch();
           break;
         case "view all employees by department":
-          deparmentSearch();
-          break;
-        case "view all employees by manager":
-          console.log("view by manager");
+          departmentSearch();
           break;
         case "add employee":
           addEmployee();
           break;
-        // case "remove employee":
-        //   console.log("remove employee");
-        //   break;
-        // case "update employee":
-        //   console.log("update employee");
-        //   break;
         case "update employee role":
-          console.log("update employee role");
+          updateEmployeeRole();
           break;
-        // case "update employee manager":
-        //   console.log("update employee manager");
-        // break;
         default:
           connection.end();
           process.exit(0);
@@ -75,7 +59,7 @@ const employeeSearch = () => {
 };
 
 // function to search for employees by their department
-const deparmentSearch = () => {
+const departmentSearch = () => {
   connection.query("SELECT * FROM department", (err, res) => {
     if (err) throw err;
     console.table(res);
@@ -110,10 +94,6 @@ const deparmentSearch = () => {
 const addEmployee = () => {
   connection.query("SELECT title FROM role", (err, roleRes) => {
     if (err) throw err;
-    // console.log(typeof roleRes);
-    // console.table(JSON.stringify(roleRes));
-    // const roles = JSON.stringify(roleRes);
-    // console.table(roles);
 
     inquirer
       .prompt([
@@ -134,34 +114,69 @@ const addEmployee = () => {
           choices: [1, 2, 3, 4, 5, 6, 7, 8],
         },
         {
-          name: "department",
-          type: "input",
-          message: "department of new employee?",
+          name: "manager",
+          type: "list",
+          message: "manager id of new employee?",
+          choices: [1, 2, 3, 4, 5, 6, 7, 8],
         },
       ])
-      .then(({ first, last, roleID, deparment }) => {
-        ///console tables the input
-        console.table(first, last, roleID, deparment);
-        //connection to workbench table
+      .then(({ first, last, role, manager }) => {
+        if (err) throw err;
+        console.log("Connected to employee table!");
+
+        //inserting into the table what is captured by node
         connection.query(
-          "SELECT * FROM employee",
-          (err, first, last, roleID, deparment) => {
+          "INSERT INTO employee SET ?",
+          {
+            first_name: first,
+            last_name: last,
+            role_id: role,
+            manager_id: manager,
+          },
+          (err, res) => {
             if (err) throw err;
-            console.log("Connected to employee table!");
-            //inserting into the table what is captured by node
-            //     var sql =
-            //       "INSERT INTO employee (first_name, last_name, role_id, department) VALUES ?";
-            //     {
-            //       first, last, roleID, department;
-            //     }
-            //     // error:  ReferenceError: newEmployee is not defined
-            //     data.forEach((item) => {
-            //       console.log("Employee record inserted");
-            //       console.table(item.first, item.last, item.roleID, item.department);
-            //     });
+            console.table(res.affectedRows);
+            mainMenu();
           }
         );
-        // mainMenu();
+      });
+  });
+};
+
+// function to update Employee, role, department
+const updateEmployeeRole = () => {
+  console.log("Updating employee role --------");
+
+  connection.query("SELECT * FROM role", (err, res2) => {
+    if (err) throw err;
+    console.table(res2);
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "which role?",
+          name: "roleChoices",
+          choices: res2,
+        },
+      ])
+      .then((roleData) => {
+        console.log(roleData);
+        // connection.query(
+        //   'UPDATE products SET ? WHERE ?',
+        //   [
+        //     {
+        //       quantity: 100,
+        //     },
+        //     {
+        //       flavor: 'Rocky Road',
+        //     },
+        //   ],
+        //   (err, data) => {
+        //     if (err) throw err;
+        //     console.table(data);
+        //   }
+        // );
+        mainMenu();
       });
   });
 };
