@@ -153,14 +153,14 @@ const updateEmployeeRole = () => {
 
   connection.query("SELECT * FROM role", (err, res2) => {
     if (err) throw err;
-    console.table(res2);
+    console.log(res2);
     inquirer
       .prompt([
         {
           type: "list",
           message: "which role?",
           name: "roleChoices",
-          choices: res2,
+          choices: res2.map((data) => data.title),
         },
       ])
       .then((roleData) => {
