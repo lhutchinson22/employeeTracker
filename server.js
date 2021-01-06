@@ -153,7 +153,7 @@ const updateEmployeeRole = () => {
 
   connection.query("SELECT * FROM role", (err, res2) => {
     if (err) throw err;
-    console.log(res2);
+    // console.log(res2);
     inquirer
       .prompt([
         {
@@ -162,25 +162,22 @@ const updateEmployeeRole = () => {
           name: "roleChoices",
           choices: res2.map((data) => data.title),
         },
+        {
+          type: "input",
+          message: "which role do you want to change it to?",
+          name: "roleChange",
+        },
       ])
       .then((roleData) => {
-        console.log(roleData);
-        // connection.query(
-        //   "UPDATE role SET ? WHERE ?",
-        //   [
-        //     {
-        //       name: res2,
-        //     },
-        //     {
-        //       name: res2.roleChoices,
-        //     },
-        //   ],
-        //   (err, data) => {
-        //     if (err) throw err;
-        //     console.table(data);
-        //   }
-        // );
-        // mainMenu();
+        console.table(roleData);
+        connection.query(
+          `UPDATE role SET title= '${roleData.roleChange}' WHERE title='${roleData.roleChoices}'`,
+          (err, data) => {
+            if (err) throw err;
+            console.table(data);
+            mainMenu();
+          }
+        );
       });
   });
 };
