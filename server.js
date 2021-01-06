@@ -120,22 +120,26 @@ const addEmployee = () => {
           choices: [1, 2, 3, 4, 5, 6, 7, 8],
         },
       ])
-      .then(({ first, last, role, manager }) => {
+      .then(({ first_name, last_name, role, manager }) => {
         if (err) throw err;
         console.log("Connected to employee table!");
+        console.log("first: " + first_name);
+        console.log("last: " + last_name);
 
         //inserting into the table what is captured by node
         connection.query(
           "INSERT INTO employee SET ?",
           {
-            first_name: first,
-            last_name: last,
+            first_name: JSON.stringify(first_name),
+            last_name: JSON.stringify(last_name),
             role_id: role,
             manager_id: manager,
           },
           (err, res) => {
             if (err) throw err;
             console.table(res.affectedRows);
+            console.log("Added employee to table successful");
+            console.log("res test: " + res);
             mainMenu();
           }
         );
