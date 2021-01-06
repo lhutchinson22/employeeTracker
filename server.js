@@ -130,8 +130,8 @@ const addEmployee = () => {
         connection.query(
           "INSERT INTO employee SET ?",
           {
-            first_name: JSON.stringify(first_name),
-            last_name: JSON.stringify(last_name),
+            first_name: first_name,
+            last_name: last_name,
             role_id: role,
             manager_id: manager,
           },
@@ -139,7 +139,7 @@ const addEmployee = () => {
             if (err) throw err;
             console.table(res.affectedRows);
             console.log("Added employee to table successful");
-            console.log("res test: " + res);
+            // console.log("res test: " + res);
             mainMenu();
           }
         );
@@ -166,13 +166,13 @@ const updateEmployeeRole = () => {
       .then((roleData) => {
         console.log(roleData);
         // connection.query(
-        //   'UPDATE products SET ? WHERE ?',
+        //   "UPDATE role SET ? WHERE ?",
         //   [
         //     {
-        //       quantity: 100,
+        //       name: res2,
         //     },
         //     {
-        //       flavor: 'Rocky Road',
+        //       name: res2.roleChoices,
         //     },
         //   ],
         //   (err, data) => {
@@ -180,7 +180,7 @@ const updateEmployeeRole = () => {
         //     console.table(data);
         //   }
         // );
-        mainMenu();
+        // mainMenu();
       });
   });
 };
